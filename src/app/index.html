@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>무던한 지도</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="#" data-go="home" aria-label="무던한 지도 처음으로">
+    <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path d="M16 3c-5.5 0-10 4.3-10 9.7C6 20 16 29 16 29s10-9 10-16.3C26 7.3 21.5 3 16 3z" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M11 13.5c1.6-1.4 3.3-1.4 5 0s3.4 1.4 5 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    <span>무던한 지도</span>
+  </a>
+  <form class="search" id="search" role="search">
+    <label class="seg"><span class="seg-k">어디로</span><input id="q" type="search" placeholder="구·동·도로명 (예: 마포구, 망원동, 능동로)" autocomplete="off"></label>
+    <span class="bar" aria-hidden="true"></span>
+    <label class="seg"><span class="seg-k">언제</span>
+      <select id="day"><option value="5">토요일</option><option value="6">일요일</option><option value="0">월요일</option><option value="1">화요일</option><option value="2">수요일</option><option value="3">목요일</option><option value="4">금요일</option></select>
+    </label>
+    <span class="bar" aria-hidden="true"></span>
+    <button type="button" class="seg seg-btn" id="openProfile"><span class="seg-k">우리 아이</span><span id="profileSummary" class="seg-v">갑작스러운 소리</span></button>
+    <button class="orb" type="submit" aria-label="찾기"><svg viewBox="0 0 32 32" width="16" height="16" aria-hidden="true"><circle cx="14" cy="14" r="8.5" fill="none" stroke="currentColor" stroke-width="4"/><path d="M20.5 20.5L27 27" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></button>
+  </form>
+  <button class="icon-out" id="openLog" aria-label="다녀온 기록"><span id="logCount">0</span></button>
+</header>
+
+<nav class="chips" id="chips" aria-label="장소 유형"></nav>
+
+<main id="home" class="split">
+  <section class="list" aria-label="장소 목록">
+    <div class="list-head"><h1 id="resultTitle">무던한 곳</h1><span id="resultMeta" class="muted"></span></div>
+    <ol id="cards" class="cards"></ol>
+  </section>
+  <section class="mapwrap" aria-label="센서 지도">
+    <svg id="map" role="img" aria-label="서울 S-DoT 센서 위치와 깜짝 소리 위험"></svg>
+    <div class="map-legend"><span class="sw sw0"></span>무던함<span class="sw sw2"></span><span class="sw sw3"></span>깜짝 소리 잦음</div>
+  </section>
+</main>
+
+<main id="detail" class="detail" hidden>
+  <div class="subnav">
+    <div class="subtabs"><a href="#grid">시간표</a><a href="#compare">가까운 곳</a><a href="#basis">근거</a><a href="#after">다녀온 뒤</a></div>
+    <div class="best"><div><strong id="bestText"></strong><span id="bestSub" class="muted"></span></div><button class="cta" id="pin">이 시간 일정에 담기</button></div>
+  </div>
+  <div class="detail-body">
+    <button class="back" data-go="home">← 목록</button>
+    <h1 id="dTitle"></h1>
+    <p id="dMeta" class="muted"></p>
+    <section id="grid">
+      <h2 id="gridTitle">요일별 무던한 시간</h2>
+      <p class="muted">줄 그은 칸은 깜짝 소리(한 시간 안 최대 소음이 평균보다 10dB 넘게 튐) 가능성이 높은 시간입니다. 진할수록 위험이 큽니다.</p>
+      <div id="week" class="week" role="grid"></div>
+      <div class="legend-row"><span class="cell c0"></span>무던함 <span class="cell c1"></span><span class="cell c2"></span><span class="cell c3 x"></span>피하는 게 좋음 <span class="cell best-mark"></span>가장 무던한 2시간 <span class="cell na"></span>측정 없음</div>
+    </section>
+    <section id="compare">
+      <h2>같은 시간, 가까운 곳</h2>
+      <ol id="near" class="near"></ol>
+    </section>
+    <section id="basis">
+      <h2>근거</h2>
+      <dl class="basis" id="basisList"></dl>
+    </section>
+    <section id="after">
+      <h2>다녀온 뒤</h2>
+      <p class="muted" id="afterHint">담아 둔 시간에 다녀왔다면 아이가 어땠는지 남겨 주세요. 다음 추천에서 소리 종류별 무게가 달라집니다.</p>
+      <div class="after-btns"><button class="btn-sec" data-fb="ok">괜찮았어요</button><button class="btn-sec" data-fb="hard">힘들었어요</button></div>
+      <p id="afterResult" class="muted"></p>
+    </section>
+    <p class="note">예측은 서울 S-DoT 센서 1,025곳의 2026년 8월 17일~10월 11일 실측(1시간 단위 소음 최대·평균)으로 학습한 그래디언트 부스팅 모델입니다. 센서는 장소 안이 아니라 길가 가로등·건물 벽에 달려 있어, 공원 깊은 안쪽보다 입구·길가의 소리에 가깝습니다.</p>
+  </div>
+</main>
+
+<dialog id="profile" class="sheet">
+  <form method="dialog">
+    <h2>우리 아이는</h2>
+    <p class="muted">해당하는 것을 고르세요. 둘 다 고르면 두 소리를 같은 무게로 봅니다.</p>
+    <label class="opt"><input type="checkbox" id="pSpike" checked><span><strong>갑자기 큰 소리</strong>에 놀라요<br><small>사이렌, 경적, 공사 소리, 확성기</small></span></label>
+    <label class="opt"><input type="checkbox" id="pLoud"><span><strong>계속 시끄러운 곳</strong>이 힘들어요<br><small>큰길 차 소리, 시장 소음</small></span></label>
+    <label class="field">한 줄로 더 알려 주세요 <input id="pText" placeholder="예: 오토바이 소리에 귀를 막아요"></label>
+    <menu><button value="cancel" class="btn-sec">닫기</button><button value="ok" class="cta" id="pSave">적용</button></menu>
+  </form>
+</dialog>
+
+<dialog id="log" class="sheet">
+  <form method="dialog">
+    <h2>다녀온 기록</h2>
+    <ol id="logList" class="loglist"></ol>
+    <p class="muted" id="weightsNow"></p>
+    <menu><button value="cancel" class="btn-sec">닫기</button></menu>
+  </form>
+</dialog>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

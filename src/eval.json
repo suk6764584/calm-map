@@ -1,0 +1,15 @@
+{
+ "train_rows": 585911,
+ "test_rows": 158789,
+ "test_week": "2026-10-05~10-11",
+ "event_rate_test": 0.0259,
+ "auc_model": 0.856,
+ "auc_lastweek": 0.735,
+ "auc_hourmean": 0.685,
+ "mae_navg_model": 1.26,
+ "mae_navg_lastweek": 1.13,
+ "mae_navg_hourmean": 1.82,
+ "calm_hit_model": 0.033,
+ "calm_hit_lastweek": 0.0391,
+ "calm_hit_random": 0.0455
+}
